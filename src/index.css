@@ -253,7 +253,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 6px;
+  padding: 6px;
+}
+
+.hero-logo-img {
+  width: 40px;
+  height: auto;
 }
 
 .logo-text-centered {

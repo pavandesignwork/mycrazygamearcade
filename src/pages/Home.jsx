@@ -32,7 +32,8 @@ function Home() {
           {/* Logo block - top left */}
           <div className="hero-logo-block">
             <div className="hero-logo-top">
-              <Link to="/" style={{ textDecoration: "none" }}>
+              <Link to="/" style={{ textDecoration: "none", display: "flex", flexDirection: "column", alignItems: "center", gap: 4 }}>
+                <img src="/logo.png" alt="MyCrazyArcade" className="hero-logo-img" />
                 <div className="logo-text-centered">
                   <span className="my">My</span>
                   <span className="crazy">Crazy</span>
