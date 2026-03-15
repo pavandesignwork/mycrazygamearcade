@@ -239,28 +239,63 @@ body {
 
 .hero-logo-block {
   grid-column: span 2;
-  grid-row: span 1;
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  padding: 2px;
-}
-
-.hero-logo-bar {
-  display: flex;
-  align-items: center;
+  grid-row: span 2;
   background: #fff;
-  border-radius: 14px;
-  padding: 10px 16px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  text-decoration: none;
-  gap: 8px;
-}
-
-.hero-icons {
+  border-radius: 18px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  overflow: hidden;
+}
+
+.hero-logo-top {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+}
+
+.logo-text-centered {
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.logo-text-centered .my, .logo-text-centered .crazy { color: #2d7dd2; }
+.logo-text-centered .arcade, .logo-text-centered .dot-com { color: #f5a623; }
+
+.hero-logo-bottom {
+  display: flex;
+  border-top: 1px solid #eee;
+}
+
+.hero-icon-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #2d7dd2;
+  transition: background 0.2s;
+}
+
+.hero-icon-btn:hover {
+  background: #f5f5f5;
+}
+
+.hero-icon-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.hero-icon-divider {
+  width: 1px;
+  background: #eee;
 }
 
 .hero-big-game {

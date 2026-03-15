@@ -31,26 +31,29 @@ function Home() {
         <div className="hero-grid">
           {/* Logo block - top left */}
           <div className="hero-logo-block">
-            <Link to="/" className="hero-logo-bar">
-              <div className="logo-text">
-                <span className="my">My</span>
-                <span className="crazy">Crazy</span>
-                <br />
-                <span className="arcade">Arcade</span>
-                <span className="dot-com">.Com</span>
-              </div>
-            </Link>
-            <div className="hero-icons">
-              <button className="icon-btn" title="Profile">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-              </button>
-              <button className="icon-btn" onClick={() => document.dispatchEvent(new CustomEvent("open-search-panel"))} title="Search">
+            <div className="hero-logo-top">
+              <Link to="/" style={{ textDecoration: "none" }}>
+                <div className="logo-text-centered">
+                  <span className="my">My</span>
+                  <span className="crazy">Crazy</span>
+                  <br />
+                  <span className="arcade">Arcade</span>
+                  <span className="dot-com">.Com</span>
+                </div>
+              </Link>
+            </div>
+            <div className="hero-logo-bottom">
+              <button className="hero-icon-btn" onClick={() => document.dispatchEvent(new CustomEvent("open-search-panel"))} title="Search">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="11" cy="11" r="8" />
                   <path d="m21 21-4.35-4.35" />
+                </svg>
+              </button>
+              <div className="hero-icon-divider" />
+              <button className="hero-icon-btn" title="Profile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
                 </svg>
               </button>
             </div>
