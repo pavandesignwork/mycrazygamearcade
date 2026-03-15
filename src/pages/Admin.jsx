@@ -7,7 +7,7 @@ import {
   uploadThumbnail,
 } from "../lib/supabase";
 
-const CATEGORIES = ["action", "adventure", "puzzle", "racing", "sports", "arcade", "runner", "shooter", "other"];
+const CATEGORIES = ["action", "adventure", "puzzle", "racing", "sports", "arcade", "runner", "shooter", "multiplayer", "car", "shooting", "other"];
 
 function extractUrl(input) {
   const match = input.match(/src=["']([^"']+)["']/);
@@ -36,7 +36,8 @@ export default function Admin() {
   const [editingId, setEditingId] = useState(null);
   const [title, setTitle] = useState("");
   const [embedUrl, setEmbedUrl] = useState("");
-  const [category, setCategory] = useState("other");
+  const [categories, setCategories] = useState([]);
+  const [highlighted, setHighlighted] = useState(false);
   const [thumbnailFile, setThumbnailFile] = useState(null);
   const [thumbnailPreview, setThumbnailPreview] = useState("");
 
@@ -59,7 +60,8 @@ export default function Admin() {
     setEditingId(null);
     setTitle("");
     setEmbedUrl("");
-    setCategory("other");
+    setCategories([]);
+    setHighlighted(false);
     setThumbnailFile(null);
     setThumbnailPreview("");
   };
@@ -73,10 +75,19 @@ export default function Admin() {
     setEditingId(game.id);
     setTitle(game.title);
     setEmbedUrl(game.embed_url);
-    setCategory(game.category || "other");
+    // Support both old single category and new multi-category
+    const cats = game.category ? game.category.split(",").map((c) => c.trim()).filter(Boolean) : [];
+    setCategories(cats);
+    setHighlighted(game.highlighted || false);
     setThumbnailPreview(game.thumbnail || "");
     setThumbnailFile(null);
     setShowForm(true);
+  };
+
+  const toggleCategory = (cat) => {
+    setCategories((prev) =>
+      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
+    );
   };
 
   const handleFileChange = (e) => {
@@ -96,7 +107,6 @@ export default function Admin() {
     try {
       let thumbnailUrl = thumbnailPreview;
 
-      // Upload thumbnail if new file selected
       if (thumbnailFile) {
         const ext = thumbnailFile.name.split(".").pop();
         const fileName = `${slugify(title)}-${Date.now()}.${ext}`;
@@ -106,7 +116,8 @@ export default function Admin() {
       const gameData = {
         title: title.trim(),
         embed_url: embedUrl.trim(),
-        category,
+        category: categories.join(","),
+        highlighted,
         thumbnail: thumbnailUrl,
       };
 
@@ -133,6 +144,16 @@ export default function Admin() {
     try {
       await deleteGame(id);
       flash("Game deleted!");
+      loadGames();
+    } catch (err) {
+      flash("Error: " + err.message);
+    }
+  };
+
+  const handleToggleHighlight = async (game) => {
+    try {
+      await updateGame(game.id, { highlighted: !game.highlighted });
+      flash(game.highlighted ? "Removed highlight" : "Game highlighted!");
       loadGames();
     } catch (err) {
       flash("Error: " + err.message);
@@ -185,7 +206,7 @@ export default function Admin() {
       <div style={styles.header}>
         <div>
           <h1 style={styles.h1}>Game CMS</h1>
-          <p style={styles.subtitle}>{games.length} games</p>
+          <p style={styles.subtitle}>{games.length} games &middot; {games.filter((g) => g.highlighted).length} highlighted</p>
         </div>
         <div style={styles.headerActions}>
           <a href="/" style={styles.backLink}>View Site</a>
@@ -218,18 +239,42 @@ export default function Admin() {
               placeholder="https://html5.gamedistribution.com/... or paste <iframe> tag"
             />
 
-            <label style={styles.label}>Category</label>
-            <select style={styles.input} value={category} onChange={(e) => setCategory(e.target.value)}>
+            <label style={styles.label}>Categories (select multiple)</label>
+            <div style={styles.catGrid}>
               {CATEGORIES.map((c) => (
-                <option key={c} value={c}>{c}</option>
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => toggleCategory(c)}
+                  style={{
+                    ...styles.catPill,
+                    ...(categories.includes(c) ? styles.catPillActive : {}),
+                  }}
+                >
+                  {c}
+                </button>
               ))}
-            </select>
+            </div>
 
             <label style={styles.label}>Thumbnail</label>
             <input type="file" accept="image/*" onChange={handleFileChange} style={styles.fileInput} />
             {thumbnailPreview && (
               <img src={thumbnailPreview} alt="preview" style={styles.preview} />
             )}
+
+            <label style={{ ...styles.label, marginTop: 16 }}>
+              <span style={styles.highlightToggle}>
+                <input
+                  type="checkbox"
+                  checked={highlighted}
+                  onChange={(e) => setHighlighted(e.target.checked)}
+                  style={{ width: 18, height: 18, cursor: "pointer" }}
+                />
+                <span style={{ fontSize: 14 }}>
+                  Highlight this game (shows as big block on homepage)
+                </span>
+              </span>
+            </label>
 
             <div style={styles.modalActions}>
               <button onClick={resetForm} style={styles.cancelBtn}>Cancel</button>
@@ -257,7 +302,8 @@ export default function Admin() {
           <div style={styles.tableHeader}>
             <span style={styles.colThumb}>Thumb</span>
             <span style={styles.colTitle}>Title</span>
-            <span style={styles.colCat}>Category</span>
+            <span style={styles.colCat}>Categories</span>
+            <span style={styles.colHighlight}>Big</span>
             <span style={styles.colActions}>Actions</span>
           </div>
           {filtered.length === 0 && (
@@ -280,7 +326,21 @@ export default function Admin() {
                 <small style={{ color: "#999" }}>{game.id}</small>
               </span>
               <span style={styles.colCat}>
-                <span style={styles.badge}>{game.category}</span>
+                {(game.category || "").split(",").filter(Boolean).map((c) => (
+                  <span key={c} style={styles.badge}>{c.trim()}</span>
+                ))}
+              </span>
+              <span style={styles.colHighlight}>
+                <button
+                  onClick={() => handleToggleHighlight(game)}
+                  style={{
+                    ...styles.starBtn,
+                    color: game.highlighted ? "#f5a623" : "#ccc",
+                  }}
+                  title={game.highlighted ? "Remove highlight" : "Highlight game"}
+                >
+                  ★
+                </button>
               </span>
               <span style={styles.colActions}>
                 <button onClick={() => openEdit(game)} style={styles.editBtn}>Edit</button>
@@ -295,7 +355,7 @@ export default function Admin() {
 }
 
 const styles = {
-  container: { maxWidth: 900, margin: "0 auto", padding: 20, fontFamily: "-apple-system, sans-serif" },
+  container: { maxWidth: 960, margin: "0 auto", padding: 20, fontFamily: "-apple-system, sans-serif" },
   header: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 },
   h1: { margin: 0, fontSize: 28 },
   subtitle: { margin: 0, color: "#999", fontSize: 14 },
@@ -305,24 +365,30 @@ const styles = {
   message: { background: "#e8f5e9", color: "#2e7d32", padding: "10px 16px", borderRadius: 8, marginBottom: 16, fontSize: 14 },
   search: { width: "100%", padding: "10px 16px", border: "1px solid #ddd", borderRadius: 8, fontSize: 14, marginBottom: 16, outline: "none", boxSizing: "border-box" },
   table: { background: "#fff", borderRadius: 12, overflow: "hidden", boxShadow: "0 1px 3px rgba(0,0,0,0.1)" },
-  tableHeader: { display: "flex", padding: "12px 16px", background: "#f9f9f9", borderBottom: "1px solid #eee", fontWeight: 600, fontSize: 12, textTransform: "uppercase", color: "#999" },
+  tableHeader: { display: "flex", padding: "12px 16px", background: "#f9f9f9", borderBottom: "1px solid #eee", fontWeight: 600, fontSize: 12, textTransform: "uppercase", color: "#999", alignItems: "center" },
   tableRow: { display: "flex", padding: "12px 16px", borderBottom: "1px solid #f0f0f0", alignItems: "center" },
   colThumb: { width: 60, flexShrink: 0 },
   colTitle: { flex: 1, minWidth: 0 },
-  colCat: { width: 100, flexShrink: 0, textAlign: "center" },
+  colCat: { width: 160, flexShrink: 0, display: "flex", flexWrap: "wrap", gap: 4 },
+  colHighlight: { width: 50, flexShrink: 0, textAlign: "center" },
   colActions: { width: 140, flexShrink: 0, textAlign: "right", display: "flex", gap: 8, justifyContent: "flex-end" },
   thumbImg: { width: 50, height: 34, objectFit: "cover", borderRadius: 4 },
   thumbPlaceholder: { width: 50, height: 34, background: "#eee", borderRadius: 4, display: "flex", alignItems: "center", justifyContent: "center", color: "#ccc", fontSize: 12 },
-  badge: { background: "#f0f0f0", padding: "2px 8px", borderRadius: 12, fontSize: 12 },
+  badge: { background: "#f0f0f0", padding: "2px 8px", borderRadius: 12, fontSize: 11, whiteSpace: "nowrap" },
+  starBtn: { background: "none", border: "none", fontSize: 22, cursor: "pointer", transition: "color 0.2s" },
   editBtn: { background: "#f0f0f0", border: "none", padding: "6px 12px", borderRadius: 6, cursor: "pointer", fontSize: 12 },
   deleteBtn: { background: "#fff0f0", color: "#e53935", border: "none", padding: "6px 12px", borderRadius: 6, cursor: "pointer", fontSize: 12 },
   overlay: { position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 100 },
-  modal: { background: "#fff", borderRadius: 16, padding: 30, width: "100%", maxWidth: 500, maxHeight: "90vh", overflowY: "auto" },
+  modal: { background: "#fff", borderRadius: 16, padding: 30, width: "100%", maxWidth: 520, maxHeight: "90vh", overflowY: "auto" },
   modalTitle: { marginTop: 0, marginBottom: 20 },
   label: { display: "block", fontSize: 13, fontWeight: 600, marginBottom: 4, marginTop: 14, color: "#555" },
   input: { width: "100%", padding: "10px 12px", border: "1px solid #ddd", borderRadius: 8, fontSize: 14, outline: "none", boxSizing: "border-box" },
   fileInput: { marginTop: 4 },
   preview: { width: 120, height: 80, objectFit: "cover", borderRadius: 8, marginTop: 8 },
+  catGrid: { display: "flex", flexWrap: "wrap", gap: 6, marginTop: 4 },
+  catPill: { padding: "6px 14px", borderRadius: 16, border: "2px solid #e0e0e0", background: "#fff", cursor: "pointer", fontSize: 12, fontWeight: 600, transition: "all 0.15s", color: "#555" },
+  catPillActive: { background: "#6C5CE7", color: "#fff", borderColor: "#6C5CE7" },
+  highlightToggle: { display: "flex", alignItems: "center", gap: 8, cursor: "pointer" },
   modalActions: { display: "flex", justifyContent: "flex-end", gap: 10, marginTop: 24 },
   cancelBtn: { background: "none", border: "none", padding: "10px 16px", cursor: "pointer", color: "#999", fontSize: 14 },
   saveBtn: { background: "#6C5CE7", color: "#fff", border: "none", padding: "10px 24px", borderRadius: 8, cursor: "pointer", fontWeight: 600, fontSize: 14 },
