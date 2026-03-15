@@ -7,6 +7,7 @@
 body {
   font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background: linear-gradient(135deg, #F9BF2F 0%, #FE9B00 100%);
+  background-attachment: fixed;
   color: #333;
   min-height: 100vh;
 }
@@ -15,81 +16,56 @@ body {
 
 .floating-header {
   position: fixed;
-  top: 16px;
-  left: 16px;
+  top: 12px;
+  left: 12px;
   z-index: 1000;
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: flex-start;
+  gap: 8px;
 }
 
 .logo-bar {
   display: flex;
   align-items: center;
   background: #fff;
-  border-radius: 16px;
-  padding: 8px 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  gap: 10px;
-}
-
-.logo-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
+  border-radius: 14px;
+  padding: 6px 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+  gap: 8px;
 }
 
 .logo-text {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 800;
-  line-height: 1.1;
+  line-height: 1.15;
 }
 
-.logo-text .my {
-  color: #2d7dd2;
-}
-
-.logo-text .crazy {
-  color: #2d7dd2;
-}
-
-.logo-text .arcade {
-  color: #f5a623;
-}
-
-.logo-text .dot-com {
-  color: #f5a623;
-}
+.logo-text .my, .logo-text .crazy { color: #2d7dd2; }
+.logo-text .arcade, .logo-text .dot-com { color: #f5a623; }
 
 .header-icons {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .icon-btn {
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   background: #fff;
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
   transition: transform 0.2s;
   color: #2d7dd2;
 }
 
-.icon-btn:hover {
-  transform: scale(1.08);
-}
-
-.icon-btn svg {
-  width: 20px;
-  height: 20px;
-}
+.icon-btn:hover { transform: scale(1.1); }
+.icon-btn svg { width: 18px; height: 18px; }
 
 /* ─── Side Panel ─── */
 
@@ -103,41 +79,36 @@ body {
   transition: opacity 0.3s, visibility 0.3s;
 }
 
-.panel-overlay.open {
-  opacity: 1;
-  visibility: visible;
-}
+.panel-overlay.open { opacity: 1; visibility: visible; }
 
 .side-panel {
   position: fixed;
   top: 0;
   left: 0;
-  width: 420px;
-  max-width: 90vw;
+  width: 400px;
+  max-width: 88vw;
   height: 100vh;
   background: #fff;
   z-index: 2001;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
   overflow-y: auto;
-  border-radius: 0 20px 20px 0;
-  box-shadow: 4px 0 30px rgba(0, 0, 0, 0.15);
+  border-radius: 0 18px 18px 0;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
 }
 
-.side-panel.open {
-  transform: translateX(0);
-}
+.side-panel.open { transform: translateX(0); }
 
 .panel-header {
   display: flex;
   align-items: center;
-  padding: 16px;
-  gap: 12px;
+  padding: 14px;
+  gap: 10px;
 }
 
 .panel-logo {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: #2d7dd2;
   display: flex;
@@ -145,27 +116,25 @@ body {
   justify-content: center;
   color: #fff;
   font-weight: 800;
-  font-size: 16px;
+  font-size: 14px;
   flex-shrink: 0;
 }
 
 .panel-search {
   flex: 1;
-  padding: 10px 16px;
+  padding: 9px 14px;
   border: 2px solid #e0e0e0;
-  border-radius: 30px;
-  font-size: 15px;
+  border-radius: 24px;
+  font-size: 14px;
   outline: none;
   font-family: inherit;
 }
 
-.panel-search:focus {
-  border-color: #2d7dd2;
-}
+.panel-search:focus { border-color: #2d7dd2; }
 
 .panel-close {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: #f0f0f0;
   border: none;
@@ -173,37 +142,30 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
   color: #2d7dd2;
   flex-shrink: 0;
   transition: background 0.2s;
 }
 
-.panel-close:hover {
-  background: #e0e0e0;
-}
-
-/* ─── Category Pills ─── */
+.panel-close:hover { background: #e0e0e0; }
 
 .category-pills {
   display: flex;
-  gap: 8px;
-  padding: 8px 16px;
+  gap: 6px;
+  padding: 6px 14px;
   overflow-x: auto;
   scrollbar-width: none;
 }
 
-.category-pills::-webkit-scrollbar {
-  display: none;
-}
+.category-pills::-webkit-scrollbar { display: none; }
 
 .pill {
-  padding: 8px 16px;
-  border-radius: 20px;
+  padding: 6px 14px;
+  border-radius: 16px;
   border: 2px solid #e0e0e0;
   background: #fff;
   cursor: pointer;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   white-space: nowrap;
@@ -212,97 +174,91 @@ body {
   color: #555;
 }
 
-.pill:hover,
-.pill.active {
+.pill:hover, .pill.active {
   background: #2d7dd2;
   color: #fff;
   border-color: #2d7dd2;
 }
 
-/* ─── Panel Section ─── */
-
 .panel-section-title {
-  padding: 16px 16px 8px;
-  font-size: 18px;
+  padding: 12px 14px 6px;
+  font-size: 16px;
   font-weight: 800;
   color: #333;
 }
 
 .panel-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-  gap: 12px;
-  padding: 8px 16px 20px;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 10px;
+  padding: 6px 14px 20px;
 }
 
 .panel-game-card {
   text-decoration: none;
   display: block;
-  transition: transform 0.2s;
+  transition: transform 0.15s;
 }
 
-.panel-game-card:hover {
-  transform: scale(1.05);
-}
+.panel-game-card:hover { transform: scale(1.06); }
 
 .panel-game-card img {
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
-  border-radius: 16px;
+  border-radius: 14px;
   display: block;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* ─── Main Game Grid (Homepage) ─── */
+/* ─── Main Content ─── */
 
 .main-content {
-  padding: 100px 20px 40px;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 16px 16px 40px 16px;
 }
 
 .section-title {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: 800;
   color: #fff;
-  margin-bottom: 16px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 12px;
+  padding-left: 4px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
+
+/* ─── Game Grid - Dense Poki Style ─── */
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
 }
 
 .game-card {
   text-decoration: none;
   color: #333;
   display: block;
-  transition: transform 0.2s;
+  transition: transform 0.15s;
 }
 
-.game-card:hover {
-  transform: scale(1.05);
-}
+.game-card:hover { transform: scale(1.05); }
 
 .game-card img {
   width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
-  border-radius: 18px;
+  border-radius: 16px;
   display: block;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .game-card p {
   text-align: center;
-  padding: 6px 4px;
+  padding: 4px 2px;
   font-weight: 700;
-  font-size: 12px;
+  font-size: 11px;
   color: #fff;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -311,18 +267,18 @@ body {
 /* ─── Game Page ─── */
 
 .game-page {
-  padding: 20px;
+  padding: 16px;
   max-width: 1000px;
   margin: 0 auto;
 }
 
 .game-page h1 {
   text-align: left;
-  padding: 80px 0 16px;
-  font-size: 28px;
+  padding: 10px 0 12px;
+  font-size: 24px;
   font-weight: 800;
   color: #fff;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .player {
@@ -332,17 +288,17 @@ body {
 }
 
 .player iframe {
-  border-radius: 16px;
+  border-radius: 14px;
   width: 100%;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
 .game-page h2 {
-  padding: 24px 0 12px;
-  font-size: 20px;
+  padding: 20px 0 10px;
+  font-size: 18px;
   font-weight: 800;
   color: #fff;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 /* ─── Loading ─── */
@@ -350,29 +306,36 @@ body {
 .loading-text {
   text-align: center;
   padding: 60px 20px;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.8);
   font-size: 16px;
   font-weight: 600;
 }
 
 /* ─── Responsive ─── */
 
+@media (min-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  }
+}
+
 @media (max-width: 768px) {
   .grid {
-    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+    gap: 8px;
   }
 
-  .logo-text {
-    font-size: 16px;
+  .game-card p { font-size: 10px; }
+  .main-content { padding: 12px 10px 30px; }
+  .logo-text { font-size: 13px; }
+}
+
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 6px;
   }
 
-  .logo-icon {
-    width: 36px;
-    height: 36px;
-  }
-
-  .main-content {
-    padding: 90px 12px 30px;
-  }
+  .game-card img { border-radius: 12px; }
+  .game-card p { font-size: 9px; padding: 2px; }
 }
