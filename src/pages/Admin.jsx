@@ -18,7 +18,13 @@ function slugify(text) {
   return text.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 }
 
+const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || "admin123";
+
 export default function Admin() {
+  const [authed, setAuthed] = useState(() => sessionStorage.getItem("admin_auth") === "true");
+  const [password, setPassword] = useState("");
+  const [authError, setAuthError] = useState("");
+
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -137,6 +143,43 @@ export default function Admin() {
     g.title.toLowerCase().includes(search.toLowerCase())
   );
 
+  const handleLogin = () => {
+    if (password === ADMIN_PASSWORD) {
+      setAuthed(true);
+      sessionStorage.setItem("admin_auth", "true");
+      setAuthError("");
+    } else {
+      setAuthError("Wrong password");
+    }
+  };
+
+  const handleLogout = () => {
+    setAuthed(false);
+    sessionStorage.removeItem("admin_auth");
+  };
+
+  if (!authed) {
+    return (
+      <div style={styles.loginContainer}>
+        <div style={styles.loginBox}>
+          <h2 style={{ marginTop: 0 }}>Admin Login</h2>
+          {authError && <p style={{ color: "red", fontSize: 14 }}>{authError}</p>}
+          <input
+            type="password"
+            placeholder="Enter password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+            style={styles.input}
+          />
+          <button onClick={handleLogin} style={{ ...styles.addBtn, marginTop: 12, width: "100%" }}>
+            Login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={styles.container}>
       <div style={styles.header}>
@@ -147,6 +190,7 @@ export default function Admin() {
         <div style={styles.headerActions}>
           <a href="/" style={styles.backLink}>View Site</a>
           <button onClick={openNew} style={styles.addBtn}>+ Add Game</button>
+          <button onClick={handleLogout} style={styles.editBtn}>Logout</button>
         </div>
       </div>
 
@@ -282,4 +326,6 @@ const styles = {
   modalActions: { display: "flex", justifyContent: "flex-end", gap: 10, marginTop: 24 },
   cancelBtn: { background: "none", border: "none", padding: "10px 16px", cursor: "pointer", color: "#999", fontSize: 14 },
   saveBtn: { background: "#6C5CE7", color: "#fff", border: "none", padding: "10px 24px", borderRadius: 8, cursor: "pointer", fontWeight: 600, fontSize: 14 },
+  loginContainer: { display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", fontFamily: "-apple-system, sans-serif" },
+  loginBox: { background: "#fff", padding: 30, borderRadius: 16, boxShadow: "0 2px 12px rgba(0,0,0,0.1)", width: "100%", maxWidth: 360 },
 };
