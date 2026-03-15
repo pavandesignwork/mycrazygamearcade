@@ -14,16 +14,18 @@ function Home() {
   }, []);
 
   return (
-    <div>
-      <h1>Play Games</h1>
+    <div className="main-content">
       {loading ? (
-        <p style={{ textAlign: "center", padding: 40, color: "#999" }}>Loading...</p>
+        <p className="loading-text">Loading games...</p>
       ) : games.length === 0 ? (
-        <p style={{ textAlign: "center", padding: 40, color: "#999" }}>
-          No games yet. Go to <a href="/admin">/admin</a> to add games.
+        <p className="loading-text">
+          No games yet. Go to <a href="/admin" style={{ color: "#fff" }}>/admin</a> to add games.
         </p>
       ) : (
-        <GameGrid games={games} />
+        <>
+          <h2 className="section-title">Popular this week</h2>
+          <GameGrid games={games} />
+        </>
       )}
     </div>
   );

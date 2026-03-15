@@ -22,11 +22,11 @@ function GamePage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <p style={{ textAlign: "center", padding: 40 }}>Loading...</p>;
-  if (!game) return <h1>Game not found</h1>;
+  if (loading) return <p className="loading-text">Loading...</p>;
+  if (!game) return <div className="game-page"><h1>Game not found</h1></div>;
 
   return (
-    <div>
+    <div className="game-page">
       <h1>{game.title}</h1>
 
       <div className="player">
@@ -42,12 +42,6 @@ function GamePage() {
           style={{ border: "none", background: "#000", display: "block" }}
         ></iframe>
       </div>
-
-      {!game.embed_url && (
-        <p style={{ textAlign: "center", color: "red", padding: 20 }}>
-          No embed URL set for this game.
-        </p>
-      )}
 
       {similar.length > 0 && (
         <>
