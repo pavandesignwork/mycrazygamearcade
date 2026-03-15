@@ -22,10 +22,7 @@ function Home() {
           No games yet. Go to <a href="/admin" style={{ color: "#fff" }}>/admin</a> to add games.
         </p>
       ) : (
-        <>
-          <h2 className="section-title">Popular this week</h2>
-          <GameGrid games={games} />
-        </>
+        <GameGrid games={games} />
       )}
     </div>
   );
