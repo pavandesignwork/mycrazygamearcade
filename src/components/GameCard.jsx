@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
-function GameCard({ game }) {
-  const isHighlighted = game.highlighted;
+function GameCard({ game, forceBig }) {
+  const isHighlighted = forceBig || game.highlighted;
 
   return (
     <Link

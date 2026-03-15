@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getGames } from "../lib/supabase";
-import GameGrid from "../components/GameGrid";
+import { Link } from "react-router-dom";
+import GameCard from "../components/GameCard";
 
 function Home() {
   const [games, setGames] = useState([]);
@@ -13,6 +14,11 @@ function Home() {
       .finally(() => setLoading(false));
   }, []);
 
+  // First highlighted game goes big on right, rest are normal
+  const highlightedIndex = games.findIndex((g) => g.highlighted);
+  const bigGame = highlightedIndex !== -1 ? games[highlightedIndex] : games[0];
+  const otherGames = games.filter((g) => g !== bigGame);
+
   return (
     <div className="main-content">
       {loading ? (
@@ -22,7 +28,49 @@ function Home() {
           No games yet. Go to <a href="/admin" style={{ color: "#fff" }}>/admin</a> to add games.
         </p>
       ) : (
-        <GameGrid games={games} />
+        <div className="hero-grid">
+          {/* Logo block - top left */}
+          <div className="hero-logo-block">
+            <Link to="/" className="hero-logo-bar">
+              <div className="logo-text">
+                <span className="my">My</span>
+                <span className="crazy">Crazy</span>
+                <br />
+                <span className="arcade">Arcade</span>
+                <span className="dot-com">.Com</span>
+              </div>
+            </Link>
+            <div className="hero-icons">
+              <button className="icon-btn" title="Profile">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+              </button>
+              <button className="icon-btn" onClick={() => document.dispatchEvent(new CustomEvent("open-search-panel"))} title="Search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.35-4.35" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Big featured game - top right */}
+          {bigGame && (
+            <Link to={`/game/${bigGame.id}`} className="hero-big-game">
+              <img src={bigGame.thumbnail} alt={bigGame.title} />
+              <div className="hero-big-overlay">
+                <span>{bigGame.title}</span>
+              </div>
+            </Link>
+          )}
+
+          {/* Small games fill the rest */}
+          {otherGames.map((game) => (
+            <GameCard key={game.id} game={game} />
+          ))}
+        </div>
       )}
     </div>
   );
