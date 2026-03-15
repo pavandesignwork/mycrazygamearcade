@@ -8,8 +8,12 @@ function GameCard({ game }) {
       to={`/game/${game.id}`}
       className={`game-card ${isHighlighted ? "game-card-big" : ""}`}
     >
-      <img src={game.thumbnail} alt={game.title} />
-      <p>{game.title}</p>
+      <div className="game-card-inner">
+        <img src={game.thumbnail} alt={game.title} />
+        <div className="game-card-overlay">
+          <span>{game.title}</span>
+        </div>
+      </div>
     </Link>
   );
 }
